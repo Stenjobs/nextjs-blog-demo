@@ -23,6 +23,7 @@ body {
 /* 自定义滚动条样式 */
 ::-webkit-scrollbar {
   width: 8px;  /* 滚动条宽度 */
+  height: 10px;  /* 滚动条高度 */
 }
 
 ::-webkit-scrollbar-track {
