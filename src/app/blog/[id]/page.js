@@ -2,11 +2,12 @@
 
 import React, { useState, useEffect } from 'react';    
 import { getBlogDetailApi } from '@/app/api';
-import { useRouter } from 'next/router';
+// import { useRouter } from 'next/router';
 
 export default function BlogDetail() {
-    const router = useRouter();
-    const { id } = router.query;
+    // const router = useRouter();
+    // const { id } = router.query;
+    const id = '1';
     console.log(id,'33333333333333');
     const [blogDetail, setBlogDetail] = useState(null);
     const [isLoading, setIsLoading] = useState(true);
@@ -42,9 +43,9 @@ export default function BlogDetail() {
 
     return (
         <div className="container mx-auto p-4">
-            <h1 className="text-3xl font-bold mb-4">{blogDetail.title}</h1>
+            <h1 className="text-3xl font-bold mb-4">{blogDetail?.title || '无标题'}</h1>
             <div className="bg-white shadow-md rounded-lg p-6 mb-4">
-                <p className="text-gray-700">{blogDetail.content}</p>
+                <p className="text-gray-700">{blogDetail?.content || '内容为空'}</p>
             </div>
             <div className="flex items-center mb-4">
                 <button onClick={handleLike} className="bg-blue-500 text-white px-4 py-2 rounded">
