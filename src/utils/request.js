@@ -2,7 +2,6 @@ import axios from 'axios'
 import qs from 'qs'
 import { getToken } from '@/utils/webStorage'
 import { toast } from 'react-toastify'
-import { useRouter } from 'next/navigation'
 
 const service = axios.create({
   // Next.js开发环境使用代理，生产环境使用实际API地址

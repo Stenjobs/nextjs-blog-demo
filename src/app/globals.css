@@ -19,3 +19,21 @@ body {
   background: var(--background);
   font-family: Arial, Helvetica, sans-serif;
 }
+
+/* 自定义滚动条样式 */
+::-webkit-scrollbar {
+  width: 8px;  /* 滚动条宽度 */
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;  /* 滚动条轨道背景 */
+}
+
+::-webkit-scrollbar-thumb {
+  background: #888;  /* 滚动条颜色 */
+  border-radius: 4px;  /* 滚动条圆角 */
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #666;  /* 鼠标悬停时的颜色 */
+}
