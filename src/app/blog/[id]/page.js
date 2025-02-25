@@ -2,12 +2,12 @@
 
 import React, { useState, useEffect } from 'react';    
 import { getBlogDetailApi } from '@/app/api';
-// import { useRouter } from 'next/router';
+import { useParams } from 'next/navigation';
 
 export default function BlogDetail() {
-    // const router = useRouter();
-    // const { id } = router.query;
-    const id = '1';
+    const params = useParams();
+    const id = params.id;
+    // const id = '1';
     console.log(id,'33333333333333');
     const [blogDetail, setBlogDetail] = useState(null);
     const [isLoading, setIsLoading] = useState(true);
@@ -16,11 +16,16 @@ export default function BlogDetail() {
     const [newComment, setNewComment] = useState('');
 
     const getBlog = async () => {
-        const res = await getBlogDetailApi({ id });
-        setBlogDetail(res.data);
-        setLikes(res.data.likes || 0);
-        setComments(res.data.comments || []);
-        setIsLoading(false);
+        try {
+            const res = await getBlogDetailApi({ id });
+            setBlogDetail(res.data);
+            setLikes(res.data.likes || 0);
+            setComments(res.data.comments || []);
+        } catch (error) {
+            console.error('获取博客详情失败:', error);
+        } finally {
+            setIsLoading(false);
+        }
     }
 
     useEffect(() => {
