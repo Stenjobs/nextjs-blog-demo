@@ -1,7 +1,8 @@
 import axios from 'axios'
 import qs from 'qs'
-import { getToken } from '@/utils/webStorage'
 import { toast } from 'react-toastify'
+import { store } from '@/store'
+import { logout } from '@/store/slices/userSlice'
 
 const service = axios.create({
   // Next.js开发环境使用代理，生产环境使用实际API地址
@@ -19,9 +20,13 @@ service.interceptors.request.use(
     // 根据请求头判断是否为字节流
     isBlob = config.responseType === 'blob'
 
+    // 从 Redux 获取 token
+    const state = store.getState();
+    const token = state.user.token;
+    
     // 处理头部信息：添加token
-    if (getToken()) {
-      config.headers.Authorization = 'Bearer ' + getToken()
+    if (token) {
+      config.headers.Authorization = 'Bearer ' + token
     }
 
     // 请求为表单时
@@ -67,7 +72,9 @@ service.interceptors.response.use(
       // 401: token失效
       if (res.code === 401) {
         if (typeof window !== 'undefined') {
-          // 使用window.confirm替代ElMessageBox
+          // 使用 Redux 清除用户信息
+          store.dispatch(logout());
+          
           if (window.confirm('登录失效，请重新登录')) {
             // Next.js路由跳转
             window.location.href = '/login'

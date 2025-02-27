@@ -80,3 +80,49 @@ export function editBlogApi(data) {
         data
     })
 }
+// 注册
+export function registerApi(data) {
+    return request({
+        url: '/user/register',
+        method: 'post',
+        data
+    })
+}
+// 获取用户列表
+export function getUserListApi(params) {
+    return request({
+        url: '/user/list',
+        method: 'get',
+        params
+    })
+}
+
+// 更新用户信息
+export function updateUserInfoApi(data) {
+    return request({
+        url: '/user/update',
+        method: 'post',
+        data
+    })
+}
+
+// 导出用户列表
+export function exportUserListApi(params) {
+    return request({
+        url: '/user/export',
+        method: 'get',
+        params,
+        responseType: 'blob'
+    })
+}
+
+// 登录
+export function loginApi(data) {
+    return request({
+      url: '/user/login',
+      method: 'post',
+      data
+    })
+  }
+
+

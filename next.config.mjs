@@ -16,7 +16,7 @@ const nextConfig = {
   
   // 如果需要配置其他选项，例如：
   images: {
-    domains: ['your-image-domain.com'],
+    domains: ['8.134.205.132'],
   }
 };
 

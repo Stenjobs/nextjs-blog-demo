@@ -5,12 +5,26 @@ import Link from 'next/link';
 import './Header.scss';
 import { getBlogListApi } from '@/app/api';
 import debounce from 'lodash/debounce';  // 需要安装 lodash
+import LoginModal from './login';
+import { useSelector, useDispatch } from 'react-redux';
+import { logout } from '@/store/slices/userSlice';
+import { toast } from 'react-toastify';
 
 export default function Header() {
-    const [name, setName] = useState('');
     const [searchQuery, setSearchQuery] = useState('');
     const [showResults, setShowResults] = useState(false);
     const [searchResults, setSearchResults] = useState([]);
+    const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
+    
+    // 从 Redux 获取用户信息
+    const { userInfo, isLoggedIn } = useSelector(state => state.user);
+    const dispatch = useDispatch();
+    
+    // 处理退出登录
+    const handleLogout = () => {
+      dispatch(logout());
+      toast.success('已退出登录');
+    };
 
     // 使用 useCallback 包装防抖函数，避免重复创建
     const debouncedSearch = useCallback(
@@ -58,9 +72,11 @@ export default function Header() {
             setShowResults(true);
         }
     };
+    
     useEffect(() => {
         getSearchResults();
     }, [searchQuery]);
+
     // 点击外部关闭弹窗
     useEffect(() => {
         // 添加全局点击事件监听
@@ -72,86 +88,132 @@ export default function Header() {
         };
     }, []);
 
-    return <div className="flex justify-between items-center mb-8">
-        <div className="flex items-center gap-8">
-            <div>
-                <h1 className="text-2xl font-semibold">Welcome, {name || '请登录~'}</h1>
-                <p className="text-sm text-gray-500">What shall we do today?</p>
+    return (
+        <div className="flex justify-between items-center mb-8">
+            <div className="flex items-center gap-8">
+                <div>
+                    <h1 className="text-2xl font-semibold">
+                        Welcome, {isLoggedIn ? (userInfo.nickname || userInfo.username) : '请登录~'}
+                    </h1>
+                    <p className="text-sm text-gray-500">What shall we do today?</p>
+                </div>
+                <nav className="nav flex items-center gap-6">
+                    <Link href="/" className="text-gray-600 hover:text-[#a0e3e6] transition-colors duration-200">首页</Link>
+                    <Link href="/thoughts" className="text-gray-600 hover:text-[#a0e3e6] transition-colors duration-200">闪念</Link>
+                </nav>
             </div>
-            <nav className="nav flex items-center gap-6">
-                <Link href="/" className="text-gray-600 hover:text-[#a0e3e6] transition-colors duration-200">首页</Link>
-                <Link href="/thoughts" className="text-gray-600 hover:text-[#a0e3e6] transition-colors duration-200">闪念</Link>
-            </nav>
-        </div>
 
-        <div className="flex items-center gap-4">
-            <div className="relative search-container">
-                <input
-                    type="search"
-                    placeholder="Search"
-                    onChange={handleSearchChange}
-                    onFocus={handleFocus}
-                    className="pl-10 pr-4 py-2 rounded-full bg-gray-200/70 w-64 focus:w-80 transition-all duration-300 ease-in-out focus:outline-none focus:ring-2 focus:ring-blue-500/20"
-                />
-                <svg
-                    className="w-5 h-5 text-gray-500 absolute left-3 top-1/2 transform -translate-y-1/2"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                >
-                    <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+            <div className="flex items-center gap-4">
+                <div className="relative search-container">
+                    <input
+                        type="search"
+                        placeholder="Search"
+                        onChange={handleSearchChange}
+                        onFocus={handleFocus}
+                        className="pl-10 pr-4 py-2 rounded-full bg-gray-200/70 w-64 focus:w-80 transition-all duration-300 ease-in-out focus:outline-none focus:ring-2 focus:ring-blue-500/20"
                     />
-                </svg>
-                
-                {/* 搜索结果弹窗 */}
-                {showResults && searchQuery && (
-                    <div className="absolute top-full left-0 mt-2 w-full bg-white rounded-lg shadow-lg border border-gray-200 max-h-80 overflow-y-auto z-50">
-                        {searchResults
-                            .filter(item => item.title.toLowerCase().includes(searchQuery.toLowerCase()))
-                            .map(result => (
-                                <Link 
-                                    href={`/search/${result.id}`} 
-                                    key={result.id}
-                                    className="block px-4 py-2 hover:bg-gray-100 cursor-pointer"
-                                >
-                                    {result.title}
-                                </Link>
-                            ))
-                        }
-                        {searchResults.filter(item => 
-                            item.title.toLowerCase().includes(searchQuery.toLowerCase())
-                        ).length === 0 && (
-                            <div className="px-4 py-6 text-center">
-                                <div className="text-gray-400 text-sm">
-                                    <svg 
-                                        className="w-5 h-5 mx-auto mb-2" 
-                                        fill="none" 
-                                        stroke="currentColor" 
-                                        viewBox="0 0 24 24"
+                    <svg
+                        className="w-5 h-5 text-gray-500 absolute left-3 top-1/2 transform -translate-y-1/2"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                    >
+                        <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2}
+                            d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+                        />
+                    </svg>
+                    
+                    {/* 搜索结果弹窗 */}
+                    {showResults && (
+                        <div className="absolute top-full left-0 mt-2 w-full bg-white rounded-lg shadow-lg border border-gray-200 max-h-80 overflow-y-auto z-50">
+                            {searchResults
+                                .filter(item => item.title.toLowerCase().includes(searchQuery.toLowerCase()))
+                                .map(result => (
+                                    <Link 
+                                        href={`/search/${result.id}`} 
+                                        key={result.id}
+                                        className="block px-4 py-2 hover:bg-gray-100 cursor-pointer"
                                     >
-                                        <path 
-                                            strokeLinecap="round" 
-                                            strokeLinejoin="round" 
-                                            strokeWidth={2} 
-                                            d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M12 20a8 8 0 100-16 8 8 0 000 16z" 
-                                        />
-                                    </svg>
-                                    <span>未找到 "{searchQuery}" 相关结果</span>
+                                        {result.title}
+                                    </Link>
+                                ))
+                            }
+                            {searchResults.filter(item => 
+                                item.title.toLowerCase().includes(searchQuery.toLowerCase())
+                            ).length === 0 && (
+                                <div className="px-4 py-6 text-center">
+                                    <div className="text-gray-400 text-sm">
+                                        <svg 
+                                            className="w-5 h-5 mx-auto mb-2" 
+                                            fill="none" 
+                                            stroke="currentColor" 
+                                            viewBox="0 0 24 24"
+                                        >
+                                            <path 
+                                                strokeLinecap="round" 
+                                                strokeLinejoin="round" 
+                                                strokeWidth={2} 
+                                                d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M12 20a8 8 0 100-16 8 8 0 000 16z" 
+                                            />
+                                        </svg>
+                                        <span>未找到 "{searchQuery}" 相关结果</span>
+                                    </div>
                                 </div>
-                            </div>
-                        )}
+                            )}
+                        </div>
+                    )}
+                </div>
+                
+                {/* 登录和注册按钮 */}
+                {!isLoggedIn ? (
+                    <div className="flex items-center gap-2">
+                        <button 
+                            onClick={() => setIsLoginModalOpen(true)}
+                            className="px-4 py-2 rounded-full bg-gray-200/70 hover:bg-gray-300 transition-colors duration-200 ease-in-out active:scale-95 text-sm"
+                        >
+                            登录
+                        </button>
+                        <Link href="/register">
+                            <button className="px-4 py-2 rounded-full bg-gradient-to-r from-blue-500 to-cyan-500 text-white hover:from-blue-600 hover:to-cyan-600 transition-all duration-300 active:scale-95 text-sm">
+                                注册
+                            </button>
+                        </Link>
+                    </div>
+                ) : (
+                    <div className="relative group">
+                        <button className="p-2 rounded-full bg-gray-200/70 hover:bg-gray-300 transition-colors duration-200 ease-in-out active:scale-95">
+                            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                            </svg>
+                        </button>
+                        
+                        {/* 添加一个不可见的连接区域 */}
+                        <div className="absolute h-2 w-full top-full"></div>
+                        
+                        {/* 用户菜单 */}
+                        <div className="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 z-10 hidden group-hover:block">
+                            <Link href="/profile" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                                个人资料
+                            </Link>
+                            <button 
+                                onClick={handleLogout}
+                                className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                            >
+                                退出登录
+                            </button>
+                        </div>
                     </div>
                 )}
             </div>
-            <button className="p-2 rounded-full bg-gray-200/70 hover:bg-gray-300 transition-colors duration-200 ease-in-out active:scale-95">
-                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-                </svg>
-            </button>
+            
+            {/* 登录弹窗 */}
+            <LoginModal 
+                isOpen={isLoginModalOpen} 
+                onClose={() => setIsLoginModalOpen(false)} 
+            />
         </div>
-    </div>
+    );
 }
