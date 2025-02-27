@@ -6,6 +6,7 @@ import './Header.scss';
 import { getBlogListApi } from '@/app/api';
 import debounce from 'lodash/debounce';  // 需要安装 lodash
 import LoginModal from './login';
+import RegisterModal from './register';
 import { useSelector, useDispatch } from 'react-redux';
 import { logout } from '@/store/slices/userSlice';
 import { toast } from 'react-toastify';
@@ -15,6 +16,7 @@ export default function Header() {
     const [showResults, setShowResults] = useState(false);
     const [searchResults, setSearchResults] = useState([]);
     const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
+    const [isRegisterModalOpen, setIsRegisterModalOpen] = useState(false);
     
     // 从 Redux 获取用户信息
     const { userInfo, isLoggedIn } = useSelector(state => state.user);
@@ -176,11 +178,12 @@ export default function Header() {
                         >
                             登录
                         </button>
-                        <Link href="/register">
-                            <button className="px-4 py-2 rounded-full bg-gradient-to-r from-blue-500 to-cyan-500 text-white hover:from-blue-600 hover:to-cyan-600 transition-all duration-300 active:scale-95 text-sm">
-                                注册
-                            </button>
-                        </Link>
+                        <button 
+                            onClick={() => setIsRegisterModalOpen(true)}
+                            className="px-4 py-2 rounded-full bg-gradient-to-r from-blue-500 to-cyan-500 text-white hover:from-blue-600 hover:to-cyan-600 transition-all duration-300 active:scale-95 text-sm"
+                        >
+                            注册
+                        </button>
                     </div>
                 ) : (
                     <div className="relative group">
@@ -213,6 +216,14 @@ export default function Header() {
             <LoginModal 
                 isOpen={isLoginModalOpen} 
                 onClose={() => setIsLoginModalOpen(false)} 
+                openRegister={()=>setIsRegisterModalOpen(true)}
+            />
+            
+            {/* 注册弹窗 */}
+            <RegisterModal 
+                isOpen={isRegisterModalOpen} 
+                onClose={() => setIsRegisterModalOpen(false)} 
+                openLogin={()=>setIsLoginModalOpen(true)}
             />
         </div>
     );
