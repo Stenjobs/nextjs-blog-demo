@@ -6,8 +6,9 @@ import { logout } from '@/store/slices/userSlice'
 
 const service = axios.create({
   // Next.js开发环境使用代理，生产环境使用实际API地址
-  baseURL: process.env.NEXT_PUBLIC_API_URL + '/api' || '/api',
-  withCredentials: false, // 是否携带cookie
+  baseURL: '/api',
+  // baseURL: process.env.NEXT_PUBLIC_BASE_URL + '/api' || '/api',
+  withCredentials: true, // 是否携带cookie
   timeout: 60000 // 超时响应
 })
 

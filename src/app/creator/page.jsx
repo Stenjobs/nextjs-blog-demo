@@ -3,6 +3,9 @@
 import { useState } from 'react';
 import Header from '../components/Header';
 import dynamic from 'next/dynamic';
+import { addBlogApi } from '../api';
+import { toast } from 'react-toastify';
+import { useRouter } from 'next/navigation';
 
 // 动态导入编辑器组件以避免 SSR 问题
 const Editor = dynamic(() => import('../components/editor'), { 
@@ -12,6 +15,35 @@ const Editor = dynamic(() => import('../components/editor'), {
 export default function BlogCreator() {
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
+  const router = useRouter();
+
+  const handlePublish = async () => {
+    // 表单验证
+    if (!title.trim() || !content.trim()) {
+      toast.error('标题和内容不能为空');
+      return;
+    }
+
+    try {
+      const res = await addBlogApi({
+        title: title,
+        content: content
+      });
+      
+      if (res.code === 200) {
+        toast.success('发布成功！');
+        // 3秒后跳转到主页
+        setTimeout(() => {
+          router.push('/');
+        }, 3000);
+      } else {
+        toast.error('发布失败：' + res.message);
+      }
+    } catch (error) {
+      console.error('发布文章时出错：', error);
+      toast.error('发布失败，请稍后重试');
+    }
+  };
 
   return (
     <main className="p-8 bg-gray-100 min-w-[1080px] min-h-screen">
@@ -54,7 +86,10 @@ export default function BlogCreator() {
           <button className="px-6 py-2 rounded-full bg-gray-200 text-gray-700 hover:bg-gray-300 transition-colors">
             保存草稿
           </button>
-          <button className="px-6 py-2 rounded-full bg-gradient-to-r from-blue-500 to-cyan-500 text-white hover:from-blue-600 hover:to-cyan-600 transition-all duration-300">
+          <button 
+            onClick={handlePublish}
+            className="px-6 py-2 rounded-full bg-gradient-to-r from-blue-500 to-cyan-500 text-white hover:from-blue-600 hover:to-cyan-600 transition-all duration-300"
+          >
             发布文章
           </button>
         </div>
