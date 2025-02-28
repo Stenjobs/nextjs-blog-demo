@@ -1,7 +1,7 @@
 'use client'
 import { useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
-import { getBlogListApi } from './api';
+import { getBlogListApi,analysisApi } from './api';
 import Header from './components/Header';
 import Charts from './components/home/charts';
 import Trackers from './components/home/trackers';
@@ -12,13 +12,20 @@ export default function Dashboard() {
 
   useEffect(() => {
     getBlogList()
+    getAnalysisApi()
   }, [])
 
   const [blogList, setBlogList] = useState([])
+  const [analysisData, setAnalysisData] = useState({})
 
   const getBlogList = async () => {
     const res = await getBlogListApi()
     setBlogList(res.data.list)
+  }
+
+  const getAnalysisApi = async () => {
+    const res = await analysisApi()
+    setAnalysisData(res.data)
   }
 
 
@@ -39,14 +46,14 @@ export default function Dashboard() {
 
             {/* 统计卡片区域 */}
             <div className="col-span-2 space-y-3">
-              <Card />
+              <Card analysisData={analysisData}/>
               {/* Trackers connected 卡片 */}
               <Trackers />
             </div>
           </div>
 
           {/* 折线图区域 */}
-          <Charts />
+          <Charts activityTrend={analysisData.activityTrend} userTrend={analysisData.userTrend} />
         </div>
 
         {/* 右侧列：会议列表 */}

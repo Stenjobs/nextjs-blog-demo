@@ -1,6 +1,16 @@
 'use client';
 import ReactECharts from 'echarts-for-react';
-export default function Charts() {
+export default function Charts({activityTrend,userTrend}) {
+    // 计算所有系列数据中的最大值
+    const maxValue = Math.max(
+        ...(activityTrend?.series?.posts || []),
+        ...(activityTrend?.series?.likes || []),
+        ...(activityTrend?.series?.comments || [])
+    );
+    
+    // 向上取整到最接近的 10 的倍数，给图表留出一些空间
+    const yAxisMax = Math.ceil(maxValue / 10) * 5;
+
     // 图表配置
     const chartOption = {
         grid: {
@@ -22,7 +32,7 @@ export default function Charts() {
         },
         xAxis: {
             type: 'category',
-            data: ['Aug', 'Sep', 'Oct', 'Nov', 'Dec', 'Jan', 'Feb'],
+            data: activityTrend?.xAxis || [],
             axisLine: {
                 show: true,  // 显示x轴线
                 lineStyle: {
@@ -41,8 +51,8 @@ export default function Charts() {
         yAxis: {
             type: 'value',
             show: true,    // 显示y轴
-            min: -100,
-            max: 100,
+            min: 0,
+            max: yAxisMax, // 使用计算得到的最大值
             splitLine: {   // 添加网格线
                 show: true,
                 lineStyle: {
@@ -62,7 +72,7 @@ export default function Charts() {
             }
         },
         legend: {
-            data: ['Maximum of focus', 'Min or lack of focus'],
+            data: ['发帖数', '点赞数', '评论数','新增用户'],
             top: 0,
             left: 0,
             itemWidth: 8,
@@ -74,20 +84,20 @@ export default function Charts() {
         },
         series: [
             {
-                name: 'Maximum of focus',
+                name: '发帖数',
                 type: 'line',
                 smooth: true,
                 symbol: 'circle',
                 symbolSize: 8,
                 showSymbol: false,
                 hoverAnimation: true,
-                data: [30, 60, -20, -40, 30, 60, -20],
+                data: activityTrend?.series?.posts || [],
                 lineStyle: {
-                    color: '#FF9999',
+                    color: '#FF6B6B',
                     width: 3
                 },
                 itemStyle: {
-                    color: '#FF9999',
+                    color: '#FF6B6B',
                     borderWidth: 2,
                     borderColor: '#FFF'
                 },
@@ -100,29 +110,29 @@ export default function Charts() {
                         y2: 1,
                         colorStops: [{
                             offset: 0,
-                            color: 'rgba(255, 153, 153, 0.3)'
+                            color: 'rgba(255, 107, 107, 0.3)'
                         }, {
                             offset: 1,
-                            color: 'rgba(255, 153, 153, 0)'
+                            color: 'rgba(255, 107, 107, 0)'
                         }]
                     }
                 }
             },
             {
-                name: 'Min or lack of focus',
+                name: '点赞数',
                 type: 'line',
                 smooth: true,
                 symbol: 'circle',
                 symbolSize: 8,
                 showSymbol: false,
                 hoverAnimation: true,
-                data: [-40, -10, 40, 20, -40, -10, 40],
+                data: activityTrend?.series?.likes || [],
                 lineStyle: {
-                    color: '#99CCFF',
+                    color: '#4ECDC4',
                     width: 3
                 },
                 itemStyle: {
-                    color: '#99CCFF',
+                    color: '#4ECDC4',
                     borderWidth: 2,
                     borderColor: '#FFF'
                 },
@@ -135,10 +145,80 @@ export default function Charts() {
                         y2: 1,
                         colorStops: [{
                             offset: 0,
-                            color: 'rgba(153, 204, 255, 0.3)'
+                            color: 'rgba(78, 205, 196, 0.3)'
                         }, {
                             offset: 1,
-                            color: 'rgba(153, 204, 255, 0)'
+                            color: 'rgba(78, 205, 196, 0)'
+                        }]
+                    }
+                }
+            },
+            {
+                name: '评论数',
+                type: 'line',
+                smooth: true,
+                symbol: 'circle',
+                symbolSize: 8,
+                showSymbol: false,
+                hoverAnimation: true,
+                data: activityTrend?.series?.comments || [],
+                lineStyle: {
+                    color: '#FFB347',
+                    width: 3
+                },
+                itemStyle: {
+                    color: '#FFB347',
+                    borderWidth: 2,
+                    borderColor: '#FFF'
+                },
+                areaStyle: {
+                    color: {
+                        type: 'linear',
+                        x: 0,
+                        y: 0,
+                        x2: 0,
+                        y2: 1,
+                        colorStops: [{
+                            offset: 0,
+                            color: 'rgba(255, 179, 71, 0.3)'
+                        }, {
+                            offset: 1,
+                            color: 'rgba(255, 179, 71, 0)'
+                        }]
+                    }
+                }
+            },
+            {
+                name: '新增用户',
+                type: 'line',
+                smooth: true,
+                symbol: 'circle',
+                symbolSize: 8,
+                showSymbol: false,
+                hoverAnimation: true,
+                data: userTrend?.series || [],
+                lineStyle: {
+                    color: '#9D94FF',
+                    width: 3
+                },
+                itemStyle: {
+                    color: '#9D94FF',
+                    borderWidth: 2,
+                    borderColor: '#FFF'
+                },
+                areaStyle: {
+                    color: {
+                        type: 'linear',
+                        x: 0,
+                        y: 0,
+                        x2: 0,
+                        y2: 1,
+                        colorStops: [{
+                            offset: 0,
+                            color: 'rgba(157, 148, 255, 0.3)'
+                        }, {
+                            offset: 1,
+                            color: 'rgba(157, 148, 255, 0)'
                         }]
                     }
                 }
@@ -148,8 +228,8 @@ export default function Charts() {
     return <div className="animate__animated animate__lightSpeedInLeft mt-6 px-2 h-[600px]">
         <div className="flex justify-between items-center mb-6">
             <div>
-                <h2 className="text-xl font-semibold">Focusing</h2>
-                <p className="text-sm text-gray-500">Productivity analytics</p>
+                <h2 className="text-xl font-semibold">Dashboard Overview</h2>
+                <p className="text-sm text-gray-500">Performance Metrics</p>
             </div>
             <div className="flex items-center gap-2">
                 <span className="text-sm text-gray-500">Range:</span>

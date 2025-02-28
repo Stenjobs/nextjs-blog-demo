@@ -21,9 +21,11 @@ export default function RegisterModal({ isOpen, onClose, openLogin }) {
   const [isClosing, setIsClosing] = useState(false);
   const [previewUrl, setPreviewUrl] = useState('');
 
+  // 处理表单变化
   const handleChange = (e) => {
     const { name, value, type, files } = e.target;
     
+    // 如果是文件类型
     if (type === 'file') {
       const file = files[0];
       if (file) {

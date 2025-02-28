@@ -1,5 +1,14 @@
 import request from '@/utils/request'
 
+// 统计接口
+
+export function analysisApi() {
+    return request({
+        url: '/blog/analytics',
+        method: 'get'
+    })
+}
+
 // 回复评论
 export function replyCommentApi(data) {
     return request({
