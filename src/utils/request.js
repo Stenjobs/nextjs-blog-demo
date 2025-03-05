@@ -67,20 +67,21 @@ service.interceptors.response.use(
       // 使用react-toastify显示错误信息
       toast.error(res.msg || 'Error', {
         position: "top-right",
-        autoClose: 5000
+        autoClose: 2000
       })
 
       // 401: token失效
       if (res.code === 401) {
-        if (typeof window !== 'undefined') {
-          // 使用 Redux 清除用户信息
-          store.dispatch(logout());
+        store.dispatch(logout());
+        // if (typeof window !== 'undefined') {
+        //   // 使用 Redux 清除用户信息
           
-          if (window.confirm('登录失效，请重新登录')) {
-            // Next.js路由跳转
-            window.location.href = '/login'
-          }
-        }
+          
+        //   if (window.confirm('登录失效，请重新登录')) {
+        //     // Next.js路由跳转
+        //     window.location.href = '/login'
+        //   }
+        // }
       }
       return Promise.reject(new Error(res.msg || 'Error'))
     } else {
@@ -90,7 +91,7 @@ service.interceptors.response.use(
   error => {
     toast.error(error.message || 'Request Error', {
       position: "top-right",
-      autoClose: 5000
+      autoClose: 2000
     })
     return Promise.reject(error)
   }

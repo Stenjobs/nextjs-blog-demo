@@ -1,12 +1,14 @@
 'use client'
 
 import React, { useState, useEffect } from 'react';    
-import { getBlogDetailApi, likeBlogApi, addCommentApi, replyCommentApi } from '@/app/api';
+import { useSelector } from 'react-redux';
+import { getBlogDetailApi, likeBlogApi, addCommentApi, replyCommentApi, starBlogApi } from '@/app/api';
 import { useParams } from 'next/navigation';
 import dynamic from 'next/dynamic';
 import Link from 'next/link';
 import 'animate.css';
 import { formatDateTime } from '@/utils';
+import { toast } from 'react-toastify';
 
 // 动态导入 Header 组件，禁用 SSR
 const Header = dynamic(() => import('@/app/components/Header'), { ssr: false });
@@ -23,7 +25,8 @@ function BlogDetailContent() {
     const [replyingTo, setReplyingTo] = useState(null);
     const [replyContent, setReplyContent] = useState('');
     const [expandedReplies, setExpandedReplies] = useState({});
-
+    const [isStarred, setIsStarred] = useState(false);
+    const { userInfo } = useSelector(state => state.user);
     useEffect(() => {
         const fetchData = async () => {
             if (!id) return;
@@ -33,6 +36,7 @@ function BlogDetailContent() {
                 setBlogDetail(res.data);
                 setLikes(res.data.likes || 0);
                 setComments(Array.isArray(res.data.comments) ? res.data.comments : []);
+                setIsStarred(res.data.starUsers.includes(userInfo._id) || false);
             } catch (error) {
                 console.error('获取博客详情失败:', error);
             } finally {
@@ -49,6 +53,20 @@ function BlogDetailContent() {
             setLikes(likes + 1);
         } catch (error) {
             console.error('点赞失败:', error);
+        }
+    };
+
+    const handleStar = async () => {
+        try {
+            await starBlogApi({ 
+                id,
+                status: !isStarred // 当前状态取反:true表示收藏,false表示取消收藏
+            });
+            setIsStarred(!isStarred);
+            toast.success(isStarred ? '已取消收藏' : '收藏成功');
+        } catch (error) {
+            console.error('收藏操作失败:', error);
+            toast.error('操作失败，请稍后重试');
         }
     };
 
@@ -209,7 +227,7 @@ function BlogDetailContent() {
                                     <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
                                         <path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z" />
                                     </svg>
-                                    <span>{blogDetail?.viewCount || 0} 次浏览</span>
+                                    <span>{blogDetail?.views || 0} 次浏览</span>
                                 </div>
                             </div>
                         </div>
@@ -218,7 +236,7 @@ function BlogDetailContent() {
                             <div className="text-gray-700 leading-relaxed" dangerouslySetInnerHTML={{ __html: blogDetail?.content || '内容为空' }} />
                         </div>
                         
-                        <div className="flex items-center justify-center mb-8">
+                        <div className="flex items-center justify-center gap-4 mb-8">
                             <button 
                                 onClick={handleLike} 
                                 className="flex items-center gap-2 px-4 py-2 rounded-full bg-gradient-to-r from-pink-500 to-purple-500 text-white hover:from-pink-600 hover:to-purple-600 transition-all duration-300 active:scale-95"
@@ -227,6 +245,20 @@ function BlogDetailContent() {
                                     <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" />
                                 </svg>
                                 <span>{likes} 点赞</span>
+                            </button>
+
+                            <button 
+                                onClick={handleStar}
+                                className={`flex items-center gap-2 px-4 py-2 rounded-full transition-all duration-300 active:scale-95 ${
+                                    isStarred 
+                                        ? 'bg-yellow-500 text-white hover:bg-yellow-600' 
+                                        : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+                                }`}
+                            >
+                                <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                                    <path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z" />
+                                </svg>
+                                <span>收藏</span>
                             </button>
                         </div>
                         

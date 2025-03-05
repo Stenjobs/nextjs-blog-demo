@@ -1,5 +1,14 @@
 import request from '@/utils/request'
 
+// 导出一个函数addstarApi，用于添加星星
+export function starBlogApi(data) {
+    // 发送post请求，url为/blog/star，data为传入的数据
+    return request({
+        url: '/blog/star',
+        method: 'post',
+        data
+    })
+}
 // 统计接口
 
 export function analysisApi() {
