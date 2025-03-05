@@ -5,7 +5,8 @@ const nextConfig = {
     return [
       {
         source: '/api/:path*',
-        destination: 'http://8.134.205.132:6677/api/:path*' // 替换为你的后端服务器地址
+        // destination: 'http://8.134.205.132:6677/api/:path*' // 替换为你的后端服务器地址
+        destination: 'http://localhost:3000/api/:path*' // 替换为你的后端服务器地址
       }
     ]
   },
@@ -16,7 +17,8 @@ const nextConfig = {
   
   // 如果需要配置其他选项，例如：
   images: {
-    domains: ['8.134.205.132'],
+    // domains: ['8.134.205.132'],
+    domains: ['localhost'],
   }
 };
 
