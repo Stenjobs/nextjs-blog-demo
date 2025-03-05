@@ -51,13 +51,19 @@ export default function Meets({ blogList }) {
                                                     <svg className="w-3.5 h-3.5 text-purple-500" fill="currentColor" viewBox="0 0 24 24">
                                                         <path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z" />
                                                     </svg>
-                                                    <span className="text-xs text-gray-600">{item.viewCount || 666}</span>
+                                                    <span className="text-xs text-gray-600">{item.views || 0}</span>
                                                 </div>
                                                 <div className="flex items-center gap-1.5">
                                                     <svg className="w-3.5 h-3.5 text-pink-500" fill="currentColor" viewBox="0 0 24 24">
                                                         <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" />
                                                     </svg>
                                                     <span className="text-xs text-gray-600">{item.likes}</span>
+                                                </div>
+                                                <div className="flex items-center gap-1.5">
+                                                    <svg className="w-3.5 h-3.5 text-yellow-500" fill="currentColor" viewBox="0 0 24 24">
+                                                        <path d="M17 3H7c-1.1 0-2 .9-2 2v16l7-3 7 3V5c0-1.1-.9-2-2-2z"/>
+                                                    </svg>
+                                                    <span className="text-xs text-gray-600">{item.stars || 0}</span>
                                                 </div>
                                             </div>
                                         </div>
