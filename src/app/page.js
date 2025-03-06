@@ -1,22 +1,26 @@
 'use client'
 import { useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
-import { getBlogListApi,analysisApi } from './api';
+import { getBlogListApi,analysisApi,getUserSlatApi } from './api';
 import Header from './components/Header';
 import Charts from './components/home/charts';
 import Trackers from './components/home/trackers';
 import Meets from './components/home/meets';
 import Profile from './components/home/profile';
 import Card from './components/home/card';
+import { useSelector } from 'react-redux';
 export default function Dashboard() {
 
   useEffect(() => {
     getBlogList()
     getAnalysisApi()
+    getUserSlat()
   }, [])
 
   const [blogList, setBlogList] = useState([])
   const [analysisData, setAnalysisData] = useState({})
+  const [userSlatData, setUserSlatData] = useState({})
+  const user = useSelector(state => state.user)
 
   const getBlogList = async () => {
     const res = await getBlogListApi()
@@ -26,6 +30,13 @@ export default function Dashboard() {
   const getAnalysisApi = async () => {
     const res = await analysisApi()
     setAnalysisData(res.data)
+  }
+
+  const getUserSlat = async () => {
+    if(user && user.isLoggedIn){
+      const res = await getUserSlatApi()
+      setUserSlatData(res.data)
+    }
   }
 
 
@@ -42,7 +53,7 @@ export default function Dashboard() {
           {/* 第一行：个人资料和统计卡片 */}
           <div className="grid grid-cols-3 gap-6">
             {/* 个人资料卡片 */}
-            <Profile />
+            <Profile slatData={userSlatData} getUserSlat={getUserSlat} />
 
             {/* 统计卡片区域 */}
             <div className="col-span-2 space-y-3">

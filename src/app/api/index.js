@@ -1,5 +1,13 @@
 import request from '@/utils/request'
 
+export function getUserSlatApi(params) {
+    return request({
+        url: '/blog/user-stats',
+        method: 'get',
+        params
+    })
+}
+
 // 导出一个函数addstarApi，用于添加星星
 export function starBlogApi(data) {
     // 发送post请求，url为/blog/star，data为传入的数据

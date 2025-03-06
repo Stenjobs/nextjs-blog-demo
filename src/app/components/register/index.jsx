@@ -228,7 +228,7 @@ export default function RegisterModal({ isOpen, onClose, openLogin }) {
               <div className="flex-shrink-0">
                 {previewUrl ? (
                   <div className="w-16 h-16 rounded-full overflow-hidden border border-gray-200">
-                    <img src={previewUrl} alt="头像预览" className="w-full h-full object-cover" />
+                    <img src={previewUrl} alt={previewUrl} className="w-full h-full object-cover" />
                   </div>
                 ) : (
                   <div className="w-16 h-16 rounded-full bg-gray-200 flex items-center justify-center">
