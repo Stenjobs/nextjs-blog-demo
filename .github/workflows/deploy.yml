@@ -30,20 +30,19 @@ jobs:
               with:
                 ssh-private-key: ${{ secrets.ALIYUN_ESC_SECRET }}
 
-            - name: deploy # 部署
+            - name: Deploy with Docker
               run: |
-                echo "Starting deployment..."
-                # 添加 SSH 详细输出
-                ssh -v -o StrictHostKeyChecking=no root@8.134.205.132 '
-                  set -x &&  # 在远程服务器上启用命令回显
-                  echo "Current directory: $(pwd)" &&
+                ssh -o StrictHostKeyChecking=no root@8.134.205.132 '
                   cd /project/blogs/nextjs-blog-demo &&
-                  echo "Changed to directory: $(pwd)" &&
                   git pull &&
-                  npm install &&
-                  npm run build
-                ' || {
-                    echo "nextjs项目部署失败----，错误代码: $?"
-                    exit 1
-                }
+                  docker build -t nextjs-blog . &&
+                  docker stop nextjs-blog-container || true &&
+                  docker rm nextjs-blog-container || true &&
+                  docker run -d \
+                    --name nextjs-blog-container \
+                    -p 3000:3000 \
+                    -e NODE_ENV=production \
+                    --restart unless-stopped \
+                    nextjs-blog
+                '
 
