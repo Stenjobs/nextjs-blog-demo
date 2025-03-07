@@ -3,7 +3,7 @@ name: nextjs-博客项目
 on:
     push:  # 当main分支被push，以及paths里面定义的被改变时，触发xxx命令
         branches: 
-            - 'main' #push操作时，对应的分支
+            - 'master' #push操作时，对应的分支
         paths: 
             - '.github/workflows/*' #  什么文件或者文件夹里的文件变动时，触发
             - 'src/*'
