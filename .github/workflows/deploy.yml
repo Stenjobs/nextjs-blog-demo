@@ -1,0 +1,49 @@
+name: deploy myblog
+
+on:
+    push:  # 当main分支被push，以及paths里面定义的被改变时，触发xxx命令
+        branches: 
+            - 'main' #push操作时，对应的分支
+        paths: 
+            - '.github/workflows/*' #  什么文件或者文件夹里的文件变动时，触发
+            - 'src/*'
+            - 'package.json'
+            - 'utils/*'
+            - '.gitignore'
+            - 'next.config.mjs'
+            - 'postcss.config.mjs'
+            - 'tailwind.config.mjs'
+            - 'jsconfig.json'
+            - '.env.production'
+            
+jobs: 
+
+    deploy:
+        runs-on: ubuntu-latest
+        timeout-minutes: 15
+
+        steps:
+            - uses: actions/checkout@v4 #使用哪一个已经好了的action，除了这个action之外，还有其他功能的action
+
+            - name: Set up SSH
+              uses: webfactory/ssh-agent@v0.8.0
+              with:
+                ssh-private-key: ${{ secrets.ALIYUN_ESC_SECRET }}
+
+            - name: deploy # 部署
+              run: |
+                echo "Starting deployment..."
+                # 添加 SSH 详细输出
+                ssh -v -o StrictHostKeyChecking=no root@8.134.205.132 '
+                  set -x &&  # 在远程服务器上启用命令回显
+                  echo "Current directory: $(pwd)" &&
+                  cd /project/blogs/nextjs-blog-demo &&
+                  echo "Changed to directory: $(pwd)" &&
+                  git pull &&
+                  npm install &&
+                  npm run build
+                ' || {
+                    echo "部署失败，错误代码: $?"
+                    exit 1
+                }
+
