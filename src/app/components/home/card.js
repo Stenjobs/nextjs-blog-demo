@@ -1,7 +1,7 @@
 export default function Card({analysisData}) {
     return <div className="grid grid-cols-2 gap-4">
         {/* Prioritized tasks 卡片 */}
-        <div className="animate__animated animate__lightSpeedInLeft relative p-8 rounded-xl overflow-hidden hover:shadow-md transition-all duration-300 hover:scale-[1.02]" style={{
+        <div className="animate__animated animate__fadeInDown relative p-8 rounded-xl overflow-hidden hover:shadow-md transition-all duration-300 hover:scale-[1.02]" style={{
             background: `
       radial-gradient(circle at 50% 50%, #FFFFFF 0%, transparent 70%),
       linear-gradient(to bottom right, #FFE0E6 0%, #FFD4E4 50%, #FFB8D9 100%),
@@ -28,7 +28,7 @@ export default function Card({analysisData}) {
         </div>
 
         {/* Additional tasks 卡片 */}
-        <div className="animate__animated animate__lightSpeedInLeft relative p-8 rounded-xl overflow-hidden hover:shadow-md transition-all duration-300 hover:scale-[1.02]" style={{
+        <div className="animate__animated animate__fadeInDown relative p-8 rounded-xl overflow-hidden hover:shadow-md transition-all duration-300 hover:scale-[1.02]" style={{
             background: `
       radial-gradient(circle at 50% 50%, #FFFFFF 0%, transparent 70%),
       linear-gradient(to bottom right, #E4F5FF 0%, #E0F4FF 50%, #D4F4FF 100%),

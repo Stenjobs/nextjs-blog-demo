@@ -225,7 +225,7 @@ export default function Charts({activityTrend,userTrend}) {
             }
         ]
     };
-    return <div className="animate__animated animate__lightSpeedInLeft mt-6 px-2 h-[600px]">
+    return <div className="animate__animated animate__fadeInBottomLeft mt-6 px-2 h-[600px]">
         <div className="flex justify-between items-center mb-6">
             <div>
                 <h2 className="text-xl font-semibold">Dashboard Overview</h2>

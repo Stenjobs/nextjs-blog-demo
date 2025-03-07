@@ -1,5 +1,5 @@
 export default function Trackers() {
-    return <div className="animate__animated animate__lightSpeedInLeft bg-gray-200/95 backdrop-blur-sm p-3 rounded-xl border border-gray-300/50">
+    return <div className="animate__animated animate__fadeInDown bg-gray-200/95 backdrop-blur-sm p-3 rounded-xl border border-gray-300/50">
         <div className="flex justify-between items-center mb-3">
             <div>
                 <h3 className="text-sm font-medium text-gray-800">Trackers connected</h3>

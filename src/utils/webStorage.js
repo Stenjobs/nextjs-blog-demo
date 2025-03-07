@@ -1,22 +1,29 @@
+const isBrowser = typeof window !== 'undefined'
 
 export const getToken = () => {
+    if (!isBrowser) return null
     const result = localStorage.getItem('token')
     return result
 }
 
 export const setToken = val => {
-  localStorage.setItem('token', val)
+    if (!isBrowser) return
+    localStorage.setItem('token', val)
 }
 
 export const getUserInfo = () => {
-  const result = sessionStorage.getItem('userInfo') ?? '{}'
-  return JSON.parse(result)
+    if (!isBrowser) return {}
+    const result = sessionStorage.getItem('userInfo') ?? '{}'
+    return JSON.parse(result)
 }
+
 export const setUserInfo = val => {
-  const str = JSON.stringify(val || {})
-  sessionStorage.setItem('userInfo', str)
+    if (!isBrowser) return
+    const str = JSON.stringify(val || {})
+    sessionStorage.setItem('userInfo', str)
 }
 
 export const clearStore = () => {
-  localStorage.clear()
+    if (!isBrowser) return
+    localStorage.clear()
 }

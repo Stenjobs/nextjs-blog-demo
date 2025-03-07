@@ -4,7 +4,7 @@ import Link from 'next/link';
 export default function Meets({ blogList }) {
     const isLoading = blogList.length === 0;
     return (
-        <div className="col-span-2 animate__animated animate__lightSpeedInRight">
+        <div className="col-span-2 animate__animated animate__fadeInRight">
             <div className="backdrop-blur-2xl bg-white/40 p-4 rounded-lg shadow-lg hover:shadow-xl transition-all duration-300 border border-white/30">
                 <div className="flex justify-between items-center mb-4">
                     <h2 className="text-base font-medium bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">博客列表</h2>
