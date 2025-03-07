@@ -19,7 +19,7 @@ on:
 jobs: 
   build-and-deploy:
     runs-on: ubuntu-latest
-    timeout-minutes: 15
+    timeout-minutes: 30
 
     steps:
       - uses: actions/checkout@v4 #使用哪一个已经好了的action，除了这个action之外，还有其他功能的action
