@@ -43,7 +43,7 @@ jobs:
                   npm install &&
                   npm run build
                 ' || {
-                    echo "nextjs项目部署失败---，错误代码: $?"
+                    echo "nextjs项目部署失败----，错误代码: $?"
                     exit 1
                 }
 
