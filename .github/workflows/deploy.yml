@@ -17,32 +17,55 @@ on:
             - '.env.production'
             
 jobs: 
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
 
-    deploy:
-        runs-on: ubuntu-latest
-        timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4 #使用哪一个已经好了的action，除了这个action之外，还有其他功能的action
 
-        steps:
-            - uses: actions/checkout@v4 #使用哪一个已经好了的action，除了这个action之外，还有其他功能的action
-
-            - name: Set up SSH
-              uses: webfactory/ssh-agent@v0.8.0
-              with:
-                ssh-private-key: ${{ secrets.ALIYUN_ESC_SECRET }}
-
-            - name: Deploy with Docker
-              run: |
-                ssh -o StrictHostKeyChecking=no root@8.134.205.132 '
-                  cd /project/blogs/nextjs-blog-demo &&
-                  git pull &&
-                  docker build -t nextjs-blog . &&
-                  docker stop nextjs-blog-container || true &&
-                  docker rm nextjs-blog-container || true &&
-                  docker run -d \
-                    --name nextjs-blog-container \
-                    -p 9528:8866 \
-                    -e NODE_ENV=production \
-                    --restart unless-stopped \
-                    nextjs-blog
-                '
+      # 设置 Node.js 环境
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+          
+      # 安装依赖并构建
+      - name: Install dependencies and build
+        run: |
+          npm ci
+          npm run build
+          
+      # 构建 Docker 镜像
+      - name: Build Docker image
+        run: |
+          docker build -t nextjs-blog .
+          docker save nextjs-blog > nextjs-blog.tar
+          
+      # 设置 SSH
+      - name: Set up SSH
+        uses: webfactory/ssh-agent@v0.8.0
+        with:
+          ssh-private-key: ${{ secrets.ALIYUN_ESC_SECRET }}
+          
+      # 将 Docker 镜像传输到服务器并部署
+      - name: Deploy to server
+        run: |
+          # 将 Docker 镜像传输到服务器
+          scp -o StrictHostKeyChecking=no nextjs-blog.tar root@8.134.205.132:/tmp/
+          
+          # 在服务器上加载镜像并运行容器
+          ssh -o StrictHostKeyChecking=no root@8.134.205.132 '
+            cd /project/blogs/nextjs-blog-demo &&
+            docker load < /tmp/nextjs-blog.tar &&
+            docker stop nextjs-blog-container || true &&
+            docker rm nextjs-blog-container || true &&
+            docker run -d \
+              --name nextjs-blog-container \
+              -p 9528:8866 \
+              -e NODE_ENV=production \
+              --restart unless-stopped \
+              nextjs-blog &&
+            rm /tmp/nextjs-blog.tar
+          '
 
