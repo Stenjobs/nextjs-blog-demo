@@ -40,7 +40,7 @@ jobs:
                   docker rm nextjs-blog-container || true &&
                   docker run -d \
                     --name nextjs-blog-container \
-                    -p 3000:3000 \
+                    -p 9528:8866 \
                     -e NODE_ENV=production \
                     --restart unless-stopped \
                     nextjs-blog
