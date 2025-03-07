@@ -1,4 +1,4 @@
-name: deploy myblog
+name: nextjs-博客项目
 
 on:
     push:  # 当main分支被push，以及paths里面定义的被改变时，触发xxx命令
