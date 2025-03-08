@@ -64,8 +64,9 @@ jobs:
               --name nextjs-blog-container \
               -p 9528:8866 \
               -e NODE_ENV=production \
+              -e NEXT_PUBLIC_HOST=http://8.134.205.132:6677 \
               --restart unless-stopped \
-              nextjs-blog &&
+              nextjs-blog:latest &&
             rm /tmp/nextjs-blog.tar
           '
 
