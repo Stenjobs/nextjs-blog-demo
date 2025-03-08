@@ -1,5 +1,8 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  // 添加基础路径配置
+  basePath: '/nextClient', // 表示在这个路径下去运行的项目。因为服务器上的nginx配置了/nextClient就是访问这个项目，所以需要配置这个
+  
   // 配置代理
   async rewrites() {
     return [
