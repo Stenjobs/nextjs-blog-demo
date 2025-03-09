@@ -7,7 +7,7 @@ WORKDIR /app
 COPY package.json package-lock.json ./
 RUN npm ci --no-audit --no-fund
 
-# 只复制必要的文件进行构建
+# 只复制必要的文件进行构建-
 COPY next.config.mjs jsconfig.json ./
 COPY public ./public
 COPY src ./src
