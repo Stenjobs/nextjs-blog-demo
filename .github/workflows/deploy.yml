@@ -34,8 +34,13 @@ jobs:
       # 安装依赖并构建
       - name: Install dependencies and build
         run: |
-          npm ci
+          echo "安装依赖..."
+          npm ci --no-audit --no-fund
+          echo "构建应用..."
           npm run build
+          echo "检查构建输出..."
+          ls -la .next/static/css/
+          cat .next/static/css/*.css | wc -l
           
       # 构建 Docker 镜像
       - name: Build Docker image
@@ -70,4 +75,15 @@ jobs:
               nextjs-blog:latest &&
             rm /tmp/nextjs-blog.tar
           '
+
+      # 进入容器
+      - name: Enter container
+        run: |
+          docker exec -it nextjs-blog-container sh
+
+      # 检查 CSS 文件
+      - name: Check CSS files
+        run: |
+          ls -la /app/.next/static/css/
+          cat /app/.next/static/css/*.css | wc -l
 

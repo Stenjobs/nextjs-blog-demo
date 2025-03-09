@@ -7,10 +7,14 @@ WORKDIR /app
 COPY package.json package-lock.json ./
 RUN npm ci --no-audit --no-fund
 
-# 只复制必要的文件进行构建-
+# 只复制必要的文件进行构建
 COPY next.config.mjs jsconfig.json ./
 COPY public ./public
 COPY src ./src
+
+# 可能缺少了样式文件的复制
+# 如果你的样式文件在 styles/ 目录下，需要添加：
+# COPY styles ./styles
 
 # 构建应用
 RUN npm run build
