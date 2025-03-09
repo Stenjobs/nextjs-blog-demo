@@ -76,14 +76,3 @@ jobs:
             rm /tmp/nextjs-blog.tar
           '
 
-      # 进入容器
-      - name: Enter container
-        run: |
-          docker exec -it nextjs-blog-container sh
-
-      # 检查 CSS 文件
-      - name: Check CSS files
-        run: |
-          ls -la /app/.next/static/css/
-          cat /app/.next/static/css/*.css | wc -l
-
