@@ -15,6 +15,7 @@ on:
             - 'tailwind.config.mjs'
             - 'jsconfig.json'
             - '.env.production'
+            - 'Dockerfile'
             
 jobs: 
   build-and-deploy:
