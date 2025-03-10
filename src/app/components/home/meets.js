@@ -5,7 +5,7 @@ export default function Meets({ blogList }) {
     const isLoading = blogList.length === 0;
     return (
         <div className="col-span-2 animate__animated animate__fadeInRight">
-            <div className="backdrop-blur-2xl bg-white/40 p-4 rounded-lg shadow-lg hover:shadow-xl transition-all duration-300 border border-white/30">
+            <div className="backdrop-blur-2xl bg-white/40 p-4 rounded-lg shadow-lg hover:shadow-xl transition-all duration-300 border border-white/30 h-[870px] flex flex-col">
                 <div className="flex justify-between items-center mb-4">
                     <h2 className="text-base font-medium bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">博客列表</h2>
                     <select className="p-1.5 bg-white/30 border border-white/40 rounded-md text-xs text-gray-700 hover:bg-white/40 transition-colors focus:outline-none focus:ring-2 focus:ring-white/50">
@@ -13,7 +13,7 @@ export default function Meets({ blogList }) {
                         <option value="popular">最热</option>
                     </select>
                 </div>
-                <div className="space-y-3">
+                <div className="space-y-3 flex-grow overflow-y-auto">
                     {isLoading ? (
                         <div className="flex justify-center items-center h-32">
                             <svg className="animate-spin w-6 h-6 text-gray-600" fill="currentColor" viewBox="0 0 24 24">

@@ -23,7 +23,10 @@ export default function Dashboard() {
   const user = useSelector(state => state.user)
 
   const getBlogList = async () => {
-    const res = await getBlogListApi()
+    const res = await getBlogListApi({
+      page: 1,
+      pageSize: 10
+    })
     setBlogList(res.data.list)
   }
 
