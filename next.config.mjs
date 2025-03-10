@@ -19,9 +19,13 @@ const nextConfig = {
   
   // 修复 images.domains 配置
   images: {
-    domains: [
-      // 从环境变量中提取域名，如果不存在则使用默认值
-      process.env.NEXT_PUBLIC_BASE_URL || '8.134.205.132:6677'
+    remotePatterns: [
+      {
+        protocol: 'http',
+        hostname: '8.134.205.132',
+        port: '6677',
+        pathname: '/**',
+      },
     ],
   }
 };
