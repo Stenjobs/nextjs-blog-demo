@@ -103,21 +103,18 @@ function BlogDetailContent() {
                 
                 // 调用回复评论API
                 await replyCommentApi({
-                    id,
+                    blogId: id,
                     commentId: comment._id, // 评论ID
                     content: replyContent,
-                    replyTo: {
-                        userId: comment.userId,
-                        realname: comment.realname
-                    }
+                    replyToId: comment._id
                 });
                 
                 const updatedComments = [...comments];
                 
                 const newReply = {
                     content: replyContent,
-                    userId: 'current-user',
-                    realname: '当前用户',
+                    userId: userInfo._id,
+                    realname: userInfo.realname,
                     createdAt: new Date().toISOString(),
                     replyTo: {
                         userId: comment.userId,
@@ -139,21 +136,18 @@ function BlogDetailContent() {
                 
                 // 调用回复评论API
                 await replyCommentApi({
-                    id,
+                    blogId: id,
                     commentId: comment._id, // 评论ID
                     content: replyContent,
-                    replyTo: {
-                        userId: reply.userId,
-                        realname: reply.realname
-                    }
+                    replyToId: reply._id,
                 });
                 
                 const updatedComments = [...comments];
                 
                 const newReply = {
                     content: replyContent,
-                    userId: 'current-user',
-                    realname: '当前用户',
+                    userId: userInfo._id,
+                    realname: userInfo.realname,
                     createdAt: new Date().toISOString(),
                     replyTo: {
                         userId: reply.userId,
