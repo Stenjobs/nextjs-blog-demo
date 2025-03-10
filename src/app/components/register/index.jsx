@@ -65,7 +65,7 @@ export default function RegisterModal({ isOpen, onClose, openLogin }) {
     
     try {
       const response = await axios.post(
-        `${process.env.NEXT_PUBLIC_API_URL || ''}/api/common/upload`, 
+        `${process.env.NEXT_PUBLIC_BASE_URL || ''}/api/common/upload`, 
         formData, 
         {
           headers: {

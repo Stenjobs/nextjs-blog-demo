@@ -37,7 +37,7 @@ jobs:
           echo "安装依赖..."
           npm ci --no-audit --no-fund
           echo "构建应用..."
-          npm run build
+          npm run build:prod
           echo "检查构建输出..."
           ls -la .next/static/css/
           cat .next/static/css/*.css | wc -l
