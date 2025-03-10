@@ -3,6 +3,10 @@ FROM node:18-alpine AS builder
 
 WORKDIR /app
 
+# 设置构建时环境变量
+ENV NEXT_PUBLIC_BASE_URL=http://8.134.205.132:6677
+ENV NEXT_PUBLIC_API_URL=http://8.134.205.132:6677
+
 # 使用缓存层优化依赖安装
 COPY package.json package-lock.json ./
 RUN npm ci --no-audit --no-fund
@@ -31,6 +35,8 @@ RUN npm ci --only=production --no-audit --no-fund
 # 设置环境变量
 ENV NODE_ENV=production
 ENV PORT=8866
+ENV NEXT_PUBLIC_BASE_URL=http://8.134.205.132:6677
+ENV NEXT_PUBLIC_API_URL=http://8.134.205.132:6677
 
 # 暴露端口
 EXPOSE 8866
