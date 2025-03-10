@@ -10,8 +10,8 @@ export default function Profile({slatData,getUserSlat}) {
     const displayName = isLoggedIn ? (userInfo.nickname || userInfo.username) : 'Guest User';
     const avatarSrc = isLoggedIn ? (userInfo.avatarPath ? `${process.env.NEXT_PUBLIC_BASE_URL}/${userInfo.avatarPath}` : '/images/kk.png') : '/images/user.png';
 
-    return <div className="animate__animated animate__fadeInDown bg-white p-6 rounded-xl shadow-sm hover:shadow-md transition-shadow duration-300">
-        <div className="flex justify-between items-center mb-4">
+    return <div className="animate__animated animate__fadeInDown bg-white p-6 rounded-xl shadow-sm hover:shadow-md transition-shadow duration-300 flex flex-col justify-center items-center">
+        <div className="flex justify-between items-center mb-4 w-full">
             <h3 className="text-base font-medium">Profile</h3>
             <button 
                 onClick={() => {
@@ -31,7 +31,7 @@ export default function Profile({slatData,getUserSlat}) {
             </button>
         </div>
 
-        <div className="relative w-20 h-20 mb-3">
+        <div className="relative w-20 h-20 mb-3 mx-auto">
             {/* 使用本地图片作为备用，避免远程图片加载失败 */}
             <img
                 src={avatarSrc}

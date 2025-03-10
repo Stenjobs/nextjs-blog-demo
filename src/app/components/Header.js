@@ -135,7 +135,7 @@ export default function Header() {
                                 .filter(item => item.title.toLowerCase().includes(searchQuery.toLowerCase()))
                                 .map(result => (
                                     <Link 
-                                        href={`/search/${result.id}`} 
+                                        href={`/blog/${result._id}`} 
                                         key={result.id}
                                         className="block px-4 py-2 hover:bg-gray-100 cursor-pointer"
                                     >
