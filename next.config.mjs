@@ -21,7 +21,7 @@ const nextConfig = {
   images: {
     domains: [
       // 从环境变量中提取域名，如果不存在则使用默认值
-      process.env.NEXT_PUBLIC_BASE_URL || '8.134.205.132'
+      process.env.NEXT_PUBLIC_BASE_URL || '8.134.205.132:6677'
     ],
   }
 };
