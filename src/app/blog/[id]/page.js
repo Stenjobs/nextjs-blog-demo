@@ -106,7 +106,7 @@ function BlogDetailContent() {
                     blogId: id,
                     commentId: comment._id, // 评论ID
                     content: replyContent,
-                    replyToId: comment._id
+                    replyToId: comment.userId // 修改为被回复用户的ID
                 });
                 
                 const updatedComments = [...comments];
@@ -139,7 +139,7 @@ function BlogDetailContent() {
                     blogId: id,
                     commentId: comment._id, // 评论ID
                     content: replyContent,
-                    replyToId: reply._id,
+                    replyToId: reply.userId, // 修改为被回复用户的ID
                 });
                 
                 const updatedComments = [...comments];
