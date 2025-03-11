@@ -9,6 +9,7 @@ import Link from 'next/link';
 import 'animate.css';
 import { formatDateTime } from '@/utils';
 import { toast } from 'react-toastify';
+import './page.css';
 
 // 动态导入 Header 组件，禁用 SSR
 const Header = dynamic(() => import('@/app/components/Header'), { ssr: false });
@@ -202,7 +203,11 @@ function BlogDetailContent() {
                         </Link>
                         
                         <div className="text-center mb-8">
-                            <h1 className="text-3xl font-bold mb-4 bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent inline-block">{blogDetail?.title || '无标题'}</h1>
+                            <h1 className="text-3xl font-bold mb-4 bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text inline-block">
+                                {blogDetail?.title ? (
+                                    <span dangerouslySetInnerHTML={{ __html: blogDetail.title }} />
+                                ) : '无标题'}
+                            </h1>
                             
                             <div className="flex items-center justify-center gap-4 mb-6 text-sm text-gray-600">
                                 <div className="flex items-center gap-1.5">

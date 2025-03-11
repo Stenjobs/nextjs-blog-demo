@@ -232,6 +232,9 @@ export default function Header() {
                             <Link href="/profile" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
                                 个人资料
                             </Link>
+                            <Link href="/myBlogs" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                                我的文章
+                            </Link>
                             <button 
                                 onClick={handleLogout}
                                 className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"

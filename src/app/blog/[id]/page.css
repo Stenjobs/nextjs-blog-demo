@@ -1,0 +1,10 @@
+.emoji-title {
+  display: inline-block;
+  width: 100%;
+}
+
+.emoji-title span {
+  background-clip: text;
+  color: inherit;
+  -webkit-background-clip: text;
+}

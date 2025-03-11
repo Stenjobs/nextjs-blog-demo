@@ -63,7 +63,7 @@ export function getBlogDetailApi(params) {
 }
 
 // 我的博客
-export function getMyBlogApi(params) {
+export function getMyBlogsApi(params) {
     return request({
         url: '/blog/mylist',
         method: 'get',
@@ -99,7 +99,7 @@ export function deleteBlogApi(data) {
 }
 
 // 编辑
-export function editBlogApi(data) {
+export function updateBlogApi(data) {
     return request({
         url: '/blog/update',
         method: 'post',
