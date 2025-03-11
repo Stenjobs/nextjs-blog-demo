@@ -5,10 +5,11 @@ const nextConfig = {
   
   // 配置代理
   async rewrites() {
+    const destination = process.env.NEXT_PUBLIC_BASE_URL?process.env.NEXT_PUBLIC_BASE_URL+'/api/:path*': 'http://8.134.205.132:6677/api/:path*'
     return [
       {
         source: '/api/:path*',
-        destination: process.env.NEXT_PUBLIC_BASE_URL || 'http://8.134.205.132:6677/api/:path*'
+        destination: destination
       }
     ]
   },
@@ -24,6 +25,12 @@ const nextConfig = {
         protocol: 'http',
         hostname: '8.134.205.132',
         port: '6677',
+        pathname: '/**',
+      },
+      {
+        protocol: 'http',
+        hostname: 'localhost',
+        port: '3000',
         pathname: '/**',
       },
     ],
