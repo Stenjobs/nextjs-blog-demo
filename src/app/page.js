@@ -25,7 +25,7 @@ export default function Dashboard() {
   const getBlogList = async ({mode}) => {
     const res = await getBlogListApi({
       page: 1,
-      pageSize: 10,
+      pageSize: 5,
       mode: mode || 'new'
     })
     setBlogList(res.data.list)
