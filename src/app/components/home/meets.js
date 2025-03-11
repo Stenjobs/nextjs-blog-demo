@@ -1,19 +1,24 @@
 import DOMPurify from 'dompurify';
 import Link from 'next/link';
 
-export default function Meets({ blogList }) {
+export default function Meets({ blogList,onChangeSort }) {
     const isLoading = blogList.length === 0;
+    const changeSort = (sort) => {
+        onChangeSort(sort)
+    }
     return (
         <div className="col-span-2 animate__animated animate__fadeInRight">
             <div className="backdrop-blur-2xl bg-white/40 p-4 rounded-lg shadow-lg hover:shadow-xl transition-all duration-300 border border-white/30 h-[870px] flex flex-col">
                 <div className="flex justify-between items-center mb-4">
                     <h2 className="text-base font-medium bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">博客列表</h2>
-                    <select className="p-1.5 bg-white/30 border border-white/40 rounded-md text-xs text-gray-700 hover:bg-white/40 transition-colors focus:outline-none focus:ring-2 focus:ring-white/50">
-                        <option value="latest">最新</option>
-                        <option value="popular">最热</option>
+                    <select onChange={(e)=>{
+                        changeSort(e.target.value)
+                    }} className="p-1.5 bg-white/30 border border-white/40 rounded-md text-xs text-gray-700 hover:bg-white/40 transition-colors focus:outline-none focus:ring-2 focus:ring-white/50">
+                        <option value="new">最新</option>
+                        <option value="hot">最热</option>
                     </select>
                 </div>
-                <div className="space-y-3 flex-grow overflow-y-auto">
+                <div className="space-y-3 flex-grow">
                     {isLoading ? (
                         <div className="flex justify-center items-center h-32">
                             <svg className="animate-spin w-6 h-6 text-gray-600" fill="currentColor" viewBox="0 0 24 24">
@@ -73,9 +78,11 @@ export default function Meets({ blogList }) {
                         </div>
                     )}
                 </div>
-                <button className="w-full mt-4 px-4 py-2 rounded-md bg-gradient-to-r from-blue-500 to-purple-500 text-white text-sm hover:from-blue-600 hover:to-purple-600 transition-all duration-300 active:scale-95">
+                <Link href="/blogList">
+                    <button className="w-full mt-4 px-4 py-2 rounded-md bg-gradient-to-r from-blue-500 to-purple-500 text-white text-sm hover:from-blue-600 hover:to-purple-600 transition-all duration-300 active:scale-95">
                     查看更多
-                </button>
+                    </button>
+                </Link>
             </div>
         </div>
     )

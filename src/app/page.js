@@ -12,7 +12,7 @@ import { useSelector } from 'react-redux';
 export default function Dashboard() {
 
   useEffect(() => {
-    getBlogList()
+    getBlogList({mode:'new'})
     getAnalysisApi()
     getUserSlat()
   }, [])
@@ -22,10 +22,11 @@ export default function Dashboard() {
   const [userSlatData, setUserSlatData] = useState({})
   const user = useSelector(state => state.user)
 
-  const getBlogList = async () => {
+  const getBlogList = async ({mode}) => {
     const res = await getBlogListApi({
       page: 1,
-      pageSize: 10
+      pageSize: 10,
+      mode: mode || 'new'
     })
     setBlogList(res.data.list)
   }
@@ -40,6 +41,10 @@ export default function Dashboard() {
       const res = await getUserSlatApi()
       setUserSlatData(res.data)
     }
+  }
+
+  const onChangeSort = (sort) => {
+    getBlogList({mode:sort})
   }
 
 
@@ -71,7 +76,7 @@ export default function Dashboard() {
         </div>
 
         {/* 右侧列：会议列表 */}
-        <Meets blogList={blogList} />
+        <Meets blogList={blogList} onChangeSort={onChangeSort}/>
       </div>
     </main>
   );
