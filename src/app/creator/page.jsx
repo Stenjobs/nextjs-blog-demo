@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, Suspense } from 'react';
 import Header from '../components/Header';
 import dynamic from 'next/dynamic';
 import { addBlogApi, getBlogDetailApi, updateBlogApi } from '../api';
@@ -12,7 +12,8 @@ const Editor = dynamic(() => import('../components/editor'), {
   ssr: false 
 });
 
-export default function BlogCreator() {
+// 创建一个包含 useSearchParams 的组件
+function BlogCreatorContent() {
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
   const [isEditMode, setIsEditMode] = useState(false);
@@ -93,9 +94,7 @@ export default function BlogCreator() {
   };
 
   return (
-    <main className="p-8 bg-gray-100 min-w-[1080px] min-h-screen">
-      <Header />
-      
+    <>
       {/* 主要内容区域 */}
       <div className="mt-8">
         {/* 标题 */}
@@ -159,6 +158,25 @@ export default function BlogCreator() {
           </>
         )}
       </div>
+    </>
+  );
+}
+
+export default function BlogCreator() {
+  return (
+    <main className="p-8 bg-gray-100 min-w-[1080px] min-h-screen">
+      <Header />
+      <Suspense fallback={
+        <div className="flex justify-center items-center h-64 mt-8">
+          <div className="relative">
+            <div className="h-10 w-10 rounded-full border-t-2 border-b-2 border-blue-500 animate-spin"></div>
+            <div className="h-7 w-7 rounded-full border-t-2 border-b-2 border-purple-500 animate-spin absolute top-1.5 left-1.5"></div>
+          </div>
+          <span className="text-gray-600 ml-3">加载中...</span>
+        </div>
+      }>
+        <BlogCreatorContent />
+      </Suspense>
     </main>
   );
 }
