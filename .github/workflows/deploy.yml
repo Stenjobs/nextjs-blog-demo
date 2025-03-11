@@ -6,7 +6,8 @@ on:
             - 'master' #push操作时，对应的分支
         paths: 
             - '.github/workflows/*' #  什么文件或者文件夹里的文件变动时，触发
-            - 'src/*'
+            # - 'src/*' 只会匹配src目录下的文件，不会匹配src目录下的子目录
+            - 'src/**'  # 使用 ** 匹配所有子目录和文件
             - 'package.json'
             - 'utils/*'
             - '.gitignore'
