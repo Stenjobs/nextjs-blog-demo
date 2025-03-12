@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useCallback } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import './Header.scss';
 import { getBlogListApi } from '@/app/api';
 import debounce from 'lodash/debounce';  // 需要安装 lodash
@@ -92,14 +93,27 @@ export default function Header() {
 
     return (
         <div className="flex justify-between items-center mb-8">
-            <div className="flex items-center gap-8">
+            <div className="flex items-center">
+                {/* 调整 Logo 大小和样式，固定尺寸防止加载时变化 */}
+                <Link href="/" className="flex-shrink-0 mr-3">
+                    <div className="w-20 h-10 relative" style={{ minWidth: '80px', minHeight: '40px' }}>
+                        <Image 
+                            src="/images/logo.png" 
+                            alt="Logo" 
+                            fill
+                            priority
+                            className="object-contain mix-blend-multiply"
+                        />
+                    </div>
+                </Link>
+                
                 <div>
                     <h1 className="text-2xl font-semibold">
                         Welcome, {isLoggedIn ? (userInfo.nickname || userInfo.username) : '请登录~'}
                     </h1>
                     <p className="text-sm text-gray-500">What shall we do today?</p>
                 </div>
-                <nav className="nav flex items-center gap-6">
+                <nav className="nav flex items-center gap-6 ml-6">
                     <Link href="/" className="text-gray-600 hover:text-[#a0e3e6] transition-colors duration-200">首页</Link>
                     <Link href="/thoughts" className="text-gray-600 hover:text-[#a0e3e6] transition-colors duration-200">闪念</Link>
                 </nav>
