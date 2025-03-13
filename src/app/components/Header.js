@@ -234,11 +234,9 @@ function SkinDropdown({ isOpen, onClose }) {
                             onClick={() => downloadAndApplySkin(skin)}
                         >
                             <div className="aspect-w-16 aspect-h-9 w-full">
-                                <Image
+                                <img
                                     src={skin.thumbnailUrl}
                                     alt={skin.name}
-                                    width={100}
-                                    height={56}
                                     className="w-full h-full object-cover"
                                 />
                             </div>
@@ -270,11 +268,9 @@ function SkinDropdown({ isOpen, onClose }) {
                             onClick={() => downloadAndApplySkin(skin)}
                         >
                             <div className="aspect-w-16 aspect-h-9 w-full">
-                                <Image
+                                <img
                                     src={skin.thumbnailUrl}
                                     alt={skin.name}
-                                    width={100}
-                                    height={56}
                                     className="w-full h-full object-cover"
                                 />
                             </div>
@@ -395,15 +391,13 @@ export default function Header() {
     return (
         <div className="flex justify-between items-center mb-8">
             <div className="flex items-center">
-                {/* 调整 Logo 大小和样式，固定尺寸防止加载时变化 */}
+                {/* 将 Image 组件改为普通的 img 标签 */}
                 <Link href="/" className="flex-shrink-0 mr-3">
                     <div className="w-20 h-10 relative" style={{ minWidth: '80px', minHeight: '40px' }}>
-                        <Image
+                        <img
                             src="/images/logo.png"
                             alt="Logo"
-                            fill
-                            priority
-                            className="object-contain mix-blend-multiply"
+                            className="object-contain mix-blend-multiply w-full h-full"
                         />
                     </div>
                 </Link>
@@ -467,11 +461,12 @@ export default function Header() {
                         className="p-2 rounded-full bg-gray-200/70 hover:bg-gray-300 transition-colors duration-200 ease-in-out active:scale-95"
                         title="更换皮肤"
                     >
-                        <Image 
+                        <img 
                             src="/images/icons/plain-t-shirt-svgrepo-com.svg"
                             width={20}
                             height={20}
                             alt="换肤"
+                            className="w-5 h-5"
                         />
                     </button>
 

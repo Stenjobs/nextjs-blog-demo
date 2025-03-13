@@ -21,7 +21,7 @@ const geistMono = Geist_Mono({
 export default function RootLayout({ children }) {
   return (
     <html lang="zh-CN" className={`${geistSans.variable} ${geistMono.variable}`}>
-      <body>
+      <body className='bg-gray-100'>
         <Provider store={store}>
           {children}
           <ToastContainer />
