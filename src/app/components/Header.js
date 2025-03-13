@@ -440,7 +440,7 @@ function SkinDropdown({ isOpen, onClose }) {
 
                 <p className="text-xs text-gray-500 mb-3">纯色壁纸</p>
 
-                {/* 皮肤网格 */}
+                {/* 皮肤网格- */}
                 <div className="grid grid-cols-3 gap-2 mb-3">
                     {skins.filter(skin => skin.className).map(skin => (
                         <div
