@@ -99,42 +99,162 @@ const skinList = [
 function SkinDropdown({ isOpen, onClose }) {
     const [skins, setSkins] = useState([]);
     const [loadedSkins, setLoadedSkins] = useState({});
-    const [loadingSkins, setLoadingSkins] = useState({});  // 新增：跟踪正在加载的皮肤
+    const [loadingSkins, setLoadingSkins] = useState({});
     const dropdownRef = useRef(null);
+    const dbRef = useRef(null);
 
-    // 初始化加载本地存储的皮肤数据
-    useEffect(() => {
-        // 从localStorage获取已下载的皮肤
-        const storedSkins = localStorage.getItem('downloadedSkins');
-        if (storedSkins) {
-            setLoadedSkins(JSON.parse(storedSkins));
-        }
+    // 初始化 IndexedDB
+    const initIndexedDB = async () => {
+        return new Promise((resolve, reject) => {
+            const request = indexedDB.open('SkinDatabase', 1);
+            
+            request.onerror = (event) => {
+                console.error('IndexedDB 打开失败:', event);
+                reject(event);
+            };
+            
+            request.onsuccess = (event) => {
+                dbRef.current = event.target.result;
+                resolve(dbRef.current);
+            };
+            
+            request.onupgradeneeded = (event) => {
+                const db = event.target.result;
+                // 创建皮肤存储对象
+                if (!db.objectStoreNames.contains('skins')) {
+                    db.createObjectStore('skins', { keyPath: 'id' });
+                }
+                // 创建当前皮肤存储对象
+                if (!db.objectStoreNames.contains('currentSkin')) {
+                    db.createObjectStore('currentSkin', { keyPath: 'id' });
+                }
+            };
+        });
+    };
 
-        // 获取当前使用的皮肤
-        const currentSkin = localStorage.getItem('currentSkin');
-        if (currentSkin) {
-            applyBackgroundImage(JSON.parse(currentSkin));
-        }
-
-        setSkins(skinList);
-    }, []);
-
-    // 点击外部关闭下拉菜单
-    useEffect(() => {
-        const handleClickOutside = (event) => {
-            if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
-                onClose();
+    // 从 IndexedDB 获取皮肤
+    const getSkinFromDB = async (skinId) => {
+        return new Promise((resolve, reject) => {
+            if (!dbRef.current) {
+                reject('数据库未初始化');
+                return;
             }
-        };
+            
+            const transaction = dbRef.current.transaction(['skins'], 'readonly');
+            const store = transaction.objectStore('skins');
+            const request = store.get(skinId);
+            
+            request.onsuccess = () => {
+                resolve(request.result);
+            };
+            
+            request.onerror = (event) => {
+                console.error('获取皮肤失败:', event);
+                reject(event);
+            };
+        });
+    };
 
-        if (isOpen) {
-            document.addEventListener('mousedown', handleClickOutside);
-        }
+    // 保存皮肤到 IndexedDB
+    const saveSkinToDB = async (skin) => {
+        return new Promise((resolve, reject) => {
+            if (!dbRef.current) {
+                reject('数据库未初始化');
+                return;
+            }
+            
+            const transaction = dbRef.current.transaction(['skins'], 'readwrite');
+            const store = transaction.objectStore('skins');
+            const request = store.put(skin);
+            
+            request.onsuccess = () => {
+                resolve();
+            };
+            
+            request.onerror = (event) => {
+                console.error('保存皮肤失败:', event);
+                reject(event);
+            };
+        });
+    };
 
-        return () => {
-            document.removeEventListener('mousedown', handleClickOutside);
-        };
-    }, [isOpen, onClose]);
+    // 保存当前皮肤ID到 IndexedDB
+    const saveCurrentSkinToDB = async (skin) => {
+        return new Promise((resolve, reject) => {
+            if (!dbRef.current) {
+                reject('数据库未初始化');
+                return;
+            }
+            
+            const transaction = dbRef.current.transaction(['currentSkin'], 'readwrite');
+            const store = transaction.objectStore('currentSkin');
+            // 始终使用同一个ID，这样就只存储一条记录
+            const request = store.put({
+                id: 'current',
+                skinId: skin.id,
+                timestamp: new Date().getTime()
+            });
+            
+            request.onsuccess = () => {
+                resolve();
+            };
+            
+            request.onerror = (event) => {
+                console.error('保存当前皮肤失败:', event);
+                reject(event);
+            };
+        });
+    };
+
+    // 获取当前皮肤ID
+    const getCurrentSkinFromDB = async () => {
+        return new Promise((resolve, reject) => {
+            if (!dbRef.current) {
+                reject('数据库未初始化');
+                return;
+            }
+            
+            const transaction = dbRef.current.transaction(['currentSkin'], 'readonly');
+            const store = transaction.objectStore('currentSkin');
+            const request = store.get('current');
+            
+            request.onsuccess = () => {
+                resolve(request.result);
+            };
+            
+            request.onerror = (event) => {
+                console.error('获取当前皮肤失败:', event);
+                reject(event);
+            };
+        });
+    };
+
+    // 获取所有已下载的皮肤
+    const getAllSkinsFromDB = async () => {
+        return new Promise((resolve, reject) => {
+            if (!dbRef.current) {
+                reject('数据库未初始化');
+                return;
+            }
+            
+            const transaction = dbRef.current.transaction(['skins'], 'readonly');
+            const store = transaction.objectStore('skins');
+            const request = store.getAll();
+            
+            request.onsuccess = () => {
+                const skins = {};
+                request.result.forEach(skin => {
+                    skins[skin.id] = skin;
+                });
+                resolve(skins);
+            };
+            
+            request.onerror = (event) => {
+                console.error('获取所有皮肤失败:', event);
+                reject(event);
+            };
+        });
+    };
 
     // 应用背景图片
     const applyBackgroundImage = (skin) => {
@@ -153,8 +273,10 @@ function SkinDropdown({ isOpen, onClose }) {
             document.body.style.backgroundAttachment = 'fixed';
         }
 
-        // 保存当前皮肤到localStorage
-        localStorage.setItem('currentSkin', JSON.stringify(skin));
+        // 保存当前皮肤到 IndexedDB
+        saveCurrentSkinToDB(skin).catch(err => {
+            console.error('保存当前皮肤ID失败:', err);
+        });
     };
 
     // 下载并应用皮肤
@@ -175,26 +297,32 @@ function SkinDropdown({ isOpen, onClose }) {
 
             return new Promise((resolve) => {
                 const reader = new FileReader();
-                reader.onloadend = () => {
+                reader.onloadend = async () => {
                     // 创建包含base64数据的皮肤对象
                     const skinWithBase64 = {
                         ...skin,
                         base64: reader.result
                     };
 
-                    // 更新已下载皮肤
-                    const updatedLoadedSkins = {
-                        ...loadedSkins,
-                        [skin.id]: skinWithBase64
-                    };
+                    try {
+                        // 保存到 IndexedDB
+                        await saveSkinToDB(skinWithBase64);
+                        
+                        // 更新已下载皮肤状态
+                        setLoadedSkins(prev => ({
+                            ...prev,
+                            [skin.id]: skinWithBase64
+                        }));
 
-                    setLoadedSkins(updatedLoadedSkins);
-
-                    // 保存到localStorage
-                    localStorage.setItem('downloadedSkins', JSON.stringify(updatedLoadedSkins));
-
-                    // 应用背景
-                    applyBackgroundImage(skinWithBase64);
+                        // 应用背景
+                        applyBackgroundImage(skinWithBase64);
+                    } catch (error) {
+                        console.error('保存皮肤到数据库失败:', error);
+                        toast.error('保存皮肤失败，但将应用当前选择');
+                        
+                        // 即使保存失败，也应用当前皮肤
+                        applyBackgroundImage(skinWithBase64);
+                    }
 
                     // 移除加载状态
                     setLoadingSkins(prev => {
@@ -219,6 +347,75 @@ function SkinDropdown({ isOpen, onClose }) {
             });
         }
     };
+
+    // 初始化加载皮肤数据
+    useEffect(() => {
+        const loadSkinData = async () => {
+            try {
+                // 初始化数据库
+                await initIndexedDB();
+                
+                // 获取所有已下载的皮肤
+                const downloadedSkins = await getAllSkinsFromDB();
+                setLoadedSkins(downloadedSkins);
+                
+                // 获取当前使用的皮肤
+                const currentSkinData = await getCurrentSkinFromDB();
+                
+                if (currentSkinData && currentSkinData.skinId) {
+                    // 尝试从已下载皮肤中获取当前皮肤
+                    const currentSkin = downloadedSkins[currentSkinData.skinId];
+                    
+                    if (currentSkin) {
+                        // 如果找到，直接应用
+                        applyBackgroundImage(currentSkin);
+                    } else {
+                        // 如果没找到，尝试从皮肤列表中找到并下载
+                        const skinFromList = skinList.find(s => s.id === currentSkinData.skinId);
+                        if (skinFromList) {
+                            await downloadAndApplySkin(skinFromList);
+                        }
+                    }
+                }
+            } catch (error) {
+                console.error('初始化皮肤数据失败:', error);
+                // 如果 IndexedDB 失败，尝试从 localStorage 获取基本信息
+                try {
+                    const currentSkin = localStorage.getItem('currentSkin');
+                    if (currentSkin) {
+                        const parsedSkin = JSON.parse(currentSkin);
+                        const skinFromList = skinList.find(s => s.id === parsedSkin.id);
+                        if (skinFromList) {
+                            await downloadAndApplySkin(skinFromList);
+                        }
+                    }
+                } catch (localStorageError) {
+                    console.error('从 localStorage 获取皮肤失败:', localStorageError);
+                }
+            }
+            
+            setSkins(skinList);
+        };
+        
+        loadSkinData();
+    }, []);
+
+    // 点击外部关闭下拉菜单
+    useEffect(() => {
+        const handleClickOutside = (event) => {
+            if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+                onClose();
+            }
+        };
+
+        if (isOpen) {
+            document.addEventListener('mousedown', handleClickOutside);
+        }
+
+        return () => {
+            document.removeEventListener('mousedown', handleClickOutside);
+        };
+    }, [isOpen, onClose]);
 
     if (!isOpen) return null;
 
