@@ -51,7 +51,7 @@ export default function Dashboard() {
   
 
   return (
-    <main className="p-8 bg-gray-100 min-w-[1080px]">
+    <main className="p-8 min-w-[1080px]">
       {/* 顶部导航栏 */}
       <Header />
       {/* 将内容分为两列 */}

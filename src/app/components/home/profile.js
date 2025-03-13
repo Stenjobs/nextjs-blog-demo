@@ -10,7 +10,7 @@ export default function Profile({slatData,getUserSlat}) {
     const displayName = isLoggedIn ? (userInfo.nickname || userInfo.username) : 'Guest User';
     const avatarSrc = isLoggedIn ? (userInfo.avatarPath ? `${process.env.NEXT_PUBLIC_BASE_URL}/${userInfo.avatarPath}` : '/images/kk.png') : '/images/user.png';
 
-    return <div className="animate__animated animate__fadeInDown bg-white p-6 rounded-xl shadow-sm hover:shadow-md transition-shadow duration-300 flex flex-col justify-center items-center">
+    return <div className="animate__animated animate__fadeInDown p-6 rounded-xl shadow-sm hover:shadow-md transition-shadow duration-300 flex flex-col justify-center items-center backdrop-blur-md bg-white/50 border border-white/20">
         <div className="flex justify-between items-center mb-4 w-full">
             <h3 className="text-base font-medium">Profile</h3>
             <button 
