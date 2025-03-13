@@ -179,7 +179,7 @@ function BlogDetailContent() {
     };
 
     return (
-        <main className="p-8 bg-gray-100 min-w-[1080px] min-h-screen">
+        <main className="p-8 min-w-[1080px] min-h-screen">
             <Header />
             
             <div className="max-w-4xl mx-auto">

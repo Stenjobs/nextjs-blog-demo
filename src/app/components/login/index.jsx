@@ -94,7 +94,7 @@ export default function LoginModal({ isOpen, onClose, openRegister }) {
       />
       
       {/* 登录卡片 - 添加animate__faster类来加快动画速度 */}
-      <div className={`relative backdrop-blur-2xl bg-white/90 p-6 rounded-xl shadow-lg border border-white/40 w-full max-w-sm mx-4 animate__animated animate__faster ${isClosing ? 'animate__fadeOutUp' : 'animate__fadeInDown'}`}
+      <div className={`relative backdrop-blur-2xl bg-white/50 p-6 rounded-xl shadow-lg border border-white/40 w-full max-w-sm mx-4 animate__animated animate__faster ${isClosing ? 'animate__fadeOutUp' : 'animate__fadeInDown'}`}
            style={{ '--animate-duration': '0.3s' }} // 自定义动画持续时间为0.3秒
       >
         <button 

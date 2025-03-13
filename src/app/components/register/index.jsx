@@ -152,7 +152,7 @@ export default function RegisterModal({ isOpen, onClose, openLogin }) {
       />
       
       {/* 注册卡片 */}
-      <div className={`relative backdrop-blur-2xl bg-white/90 p-6 rounded-xl shadow-lg border border-white/40 w-full max-w-sm mx-4 animate__animated animate__faster ${isClosing ? 'animate__fadeOutUp' : 'animate__fadeInDown'}`}
+      <div className={`relative backdrop-blur-2xl bg-white/50 p-6 rounded-xl shadow-lg border border-white/40 w-full max-w-sm mx-4 animate__animated animate__faster ${isClosing ? 'animate__fadeOutUp' : 'animate__fadeInDown'}`}
            style={{ '--animate-duration': '0.3s' }}
       >
         <button 
